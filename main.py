@@ -14,7 +14,12 @@ def uploader():
     if request.method == 'POST':
         f = request.files['file']
         f.save('uploads/uploaded_script.m')
-        output = subprocess.run(['ls', '-lah', './uploads'], check=True, stdout=subprocess.PIPE, universal_newlines=True)
+
+        output = subprocess.run(['matlab', '-nodisplay', '-nodesktop', '-nojvm', '-nosplash', '-r',
+                                 '"try, run(\'uploads/uploaded_script.m\'), catch, exit, end, exit"', '-logfile',
+                                 'log.txt'],
+                                check=True, stdout=subprocess.PIPE, universal_newlines=True)
+
         return output.stdout
 
 
